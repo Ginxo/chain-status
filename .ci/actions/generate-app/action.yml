@@ -33,16 +33,14 @@ runs:
       with:
         repository: Ginxo/chain-status
         path: ./chain-status
-    - uses: actions/setup-node@v1
-      with:
-        node-version: 14
-        registry-url: https://registry.npmjs.org/
-    - run: yarn
+    - name: Copy old data test
+      if: hashFiles('/current-project/nonexisting') != ''
       shell: bash
-      working-directory: ./chain-status
+      run: "cp ./current-project/nonexisting ./chain-status/packages/webpage/public/ -r"
     - name: Copy old data
+      if: hashFiles('/current-project/data') != ''
       shell: bash
-      run: "[[ -e ./current-project/data ]] &&  cp ./current-project/data ./chain-status/packages/webpage/public/ -r"
+      run: "cp ./current-project/data ./chain-status/packages/webpage/public/ -r"
     - name: Download info file
       shell: bash
       run: wget ${{ inputs.info-md-url }} -O ./chain-status/packages/webpage/public/data/info.md
