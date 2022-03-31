@@ -33,12 +33,23 @@ runs:
       with:
         repository: Ginxo/chain-status
         path: ./chain-status
-    - name: Copy old data test
-      if: hashFiles('/current-project/nonexisting') != ''
-      shell: bash
-      run: "cp ./current-project/nonexisting ./chain-status/packages/webpage/public/ -r"
+    - name: Check file existence
+      id: check_files_test1
+      uses: andstor/file-existence-action@v1
+      with:
+        files: "./current-project/data"
+    - name: File exists
+      if: steps.check_files_test1.outputs.files_exists == 'true'
+      run: echo All files exists test1!
+    - name: Check file existence
+      id: check_files_test2
+      uses: andstor/file-existence-action@v1
+      with:
+        files: "./current-project/data2"
+    - name: File exists
+      if: steps.check_files_test2.outputs.files_exists == 'true'
+      run: echo All files exists test2!
     - name: Copy old data
-      if: hashFiles('/current-project/data') != ''
       shell: bash
       run: "cp ./current-project/data ./chain-status/packages/webpage/public/ -r"
     - name: Download info file
